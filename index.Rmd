@@ -1,12 +1,15 @@
 ---
-title: "Soccer Player Birth Months"
+title: "European Soccer Player Birth Months"
 description: |
-  Welcome to the website. I hope you enjoy it!
+  Exploration of European soccer players and their birthdates
 site: distill::distill_website
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
+library(tidyverse)
+library(rvest)
+library(lubridate)
 
 # Learn more about creating websites with Distill at:
 # https://rstudio.github.io/distill/website.html
@@ -14,5 +17,45 @@ knitr::opts_chunk$set(echo = FALSE)
 # Learn more about publishing to GitHub Pages at:
 # https://rstudio.github.io/distill/publish_website.html#github-pages
 
+```
+
+```{r}
+x <- read_html("https://en.wikipedia.org/wiki/UEFA_Euro_2020_squads")
+
+raw_data <- x %>%
+  html_elements("td:nth-child(4)") %>%
+  html_text2() %>%
+  as_tibble()
+
+write_csv(raw_data, "birthdates.csv")
+
+```
+
+```{r}
+data <- read_csv("birthdates.csv", 
+                       col_types = 
+                         cols(value = col_character()
+                              ))
+```
+
+```{r}
+clean_data <- data %>%
+  mutate(date_ch = str_sub(value, 2, 11)) %>%
+  mutate(date = parse_date(date_ch)) %>%
+  mutate(month = month(date)) %>%
+  select(month) %>%
+  group_by(month) %>%
+  summarize(month_count = n(), .groups = "drop")
+```
+
+```{r}
+clean_data %>%
+ggplot(mapping = aes(x = month, y = month_count)) +
+  geom_col() +
+  theme_classic() +
+  scale_x_continuous(breaks = c(1:12), labels = c(month.abb)) +
+  labs(title = "Number of EU Soccer PLayers Born Each Month", 
+       subtitle = "The most players were born in March not January", 
+       x = " ", y = "Number of Players Born", caption = "Source:Wikipedia")
 ```
 
