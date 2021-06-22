@@ -56,6 +56,7 @@ ggplot(mapping = aes(x = month, y = month_count, fill = month)) +
   scale_x_continuous(breaks = c(1:12), labels = c(month.abb)) +
   labs(title = "Number of EU Soccer PLayers Born Each Month", 
        subtitle = "The most players were born in March not January", 
-       x = " ", y = "Number of Players Born", caption = "Source:Wikipedia")
+       x = " ", y = "Number of Players Born", caption = "Source:Wikipedia") +
+  coord_flip()
 ```
 
