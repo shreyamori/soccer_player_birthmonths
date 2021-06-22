@@ -53,7 +53,7 @@ clean_data %>%
 ggplot(mapping = aes(x = month, y = month_count, fill = month)) +
   geom_col(show.legend = FALSE) +
   theme_classic() +
-  scale_x_continuous(breaks = c(1:12), labels = c(month.abb)) +
+  scale_x_continuous(breaks = c(1:12), labels = c(month.name)) +
   labs(title = "Number of EU Soccer PLayers Born Each Month", 
        subtitle = "The most players were born in March not January", 
        x = " ", y = "Number of Players Born", caption = "Source:Wikipedia") +
